@@ -25,7 +25,7 @@ public class Female extends Person {
 		this.getChildrenList().add( child );
 	}
 	
-	public double calcIMC() {
+	public double calculateIMC() {
 		return( this.weight / Math.sqrt(this.height) );
 	}
 	
