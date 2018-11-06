@@ -61,6 +61,8 @@ public final class PersonManager {
 		p.setDateOfDeath( date );
 		
 		marriagesList.add( new Marriage( p.getSpouse(), p, date, Marriage.Status.WIDOWER ) );
+		
+		System.out.println( p.getName() + " passed away =/" );
 	}
 	
 	// Returns string regarding marital status for listMarriages method. 
@@ -83,7 +85,7 @@ public final class PersonManager {
 		
 		Person spouse;
 		
-		System.out.println( "List of Marriages from " + p.getName() + ":" );
+		System.out.println( "List of Marriages of " + p.getName() + ":" );
 		for( Marriage marriage : PersonManager.getMarriagesList() ) {
 			if( marriage.getPerson1() == p || marriage.getPerson2() == p ) {
 				if( marriage.getPerson1() == p )
@@ -97,22 +99,28 @@ public final class PersonManager {
 	
 	public static void checkMaritalStatus( Person p ) {
 		Marriage.Status maritalStatus = p.getMaritalStatus();
-		String msg;
 		
-		if( maritalStatus == Marriage.Status.NOTMARRIED ) {
-			msg = p.getName() + " is not married.";
-		} else if( maritalStatus == Marriage.Status.MARRIED ) {
-			msg = p.getName() + " is married.";
-		} else if( maritalStatus == Marriage.Status.DIVORCED ) {
-			msg = p.getName() + " is divorced.";
-		} else if( maritalStatus == Marriage.Status.WIDOWER ) {
-			if( p instanceof Male ) msg = p.getName() + " is widow.";
-			else					msg = p.getName() + " is widower.";
-		} else {
-			msg = p.getName() + " already passed away.";
+		switch ( maritalStatus ) {
+		case NOTMARRIED :
+			System.out.println( p.getName() + " is not married." );
+			return;
+		case MARRIED :
+			System.out.println( p.getName() + " is married." );
+			return;
+		case DIVORCED :
+			System.out.println( p.getName() + " is divorced." );
+			return;
+		case WIDOWER :
+			if( p instanceof Male ) {
+				System.out.println( p.getName() + " is widow." );
+				return;
+			} else {
+				System.out.println( p.getName() + " is widower." );
+				return;
+			}
+		case DECEASED :
+			System.out.println( p.getName() + " already passed away." );
 		}
-		
-		System.out.println( msg );
 	}
 	
 	public static void listChildren( Person p ) {

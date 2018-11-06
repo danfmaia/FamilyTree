@@ -6,7 +6,8 @@ public final class Marriage {
 		NOTMARRIED,
 		MARRIED,
 		DIVORCED,
-		WIDOWER
+		WIDOWER,
+		DECEASED
 	}
 	
 	private Person person1;

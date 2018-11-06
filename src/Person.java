@@ -84,6 +84,9 @@ public abstract class Person {
 	}
 	
 	public Marriage.Status getMaritalStatus() {
+		if( this.getDateOfDeath() != null )
+			return Marriage.Status.DECEASED;
+			
 		List<Marriage> list = PersonManager.getMarriagesList();
 		for( int i = list.size() - 1; i>=0; i-- ) {
 			if( list.get(i).getPerson1() == this || list.get(i).getPerson2() == this )

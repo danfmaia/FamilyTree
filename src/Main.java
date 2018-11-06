@@ -25,8 +25,8 @@ public class Main {
 		System.out.println( "test1 " + pDonaNeves.getSpouse() );
 		System.out.println( "test2 " + pSirNeves.getSpouse() );
 		
-		System.out.println( "test3 " + pDonaNeves.getMaritalStatus() );
-		System.out.println( "test4 " + pSirNeves.getMaritalStatus() );
+		PersonManager.checkMaritalStatus( pDonaNeves );
+		PersonManager.checkMaritalStatus( pSirNeves );
 		
 		PersonManager.marry( pDonaNeves, pSirNeves, LocalDate.now() );
 		PersonManager.marry( pDonaMadruga, pSirMadruga, LocalDate.now() );
@@ -41,7 +41,8 @@ public class Main {
 //		PersonManager.passAway( pMaeChiquinha, LocalDate.of(1950,1,1) );
 		
 		// Implementar limite mínimo para data de nascimento?? Data de nascimento da mãe?
-		PersonManager.passAway( pMaeChiquinha, LocalDate.of(1995,1,1) );
+		PersonManager.passAway( pBruxa71, LocalDate.of(1995,1,1) );
+		PersonManager.checkMaritalStatus( pSeuMadruga );
 		
 		PersonManager.listMarriages( pDonaFlorinda );
 		PersonManager.listMarriages( pProfGirafales );
