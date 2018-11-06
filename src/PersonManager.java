@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class PersonManager {
+public final class PersonManager {
 	
 	private static List<Person> peopleList = new ArrayList<Person>();
 	private static List<Marriage> marriagesList = new ArrayList<Marriage>();
@@ -33,6 +33,17 @@ public class PersonManager {
 	    System.out.println( p.getName() + " and " + p.getSpouse().getName() + " just divorced!" );
 	    
 	    marriagesList.add( new Marriage( p, p.getSpouse(), date, Marriage.Status.DIVORCED ) );
+	}
+	
+	public static void registerChild( Female mother, Male father, Person child ) {
+		if( child.getMother() != null )
+			throw new RuntimeException( child.getName() + " is already associated to a mother!" );
+		if( child.getFather() != null && child.getFather() != father )
+			throw new RuntimeException( child.getName() + " is already associated to a father!" );
+		child.setFather( father );
+		child.setMother( mother );
+		father.getChildrenList().add( child );
+		mother.getChildrenList().add( child );
 	}
 	
 	public static void passAway( Person p, LocalDate date ) {
@@ -104,7 +115,7 @@ public class PersonManager {
 		System.out.println( msg );
 	}
 	
-	public void listChildren( Person p ) {
+	public static void listChildren( Person p ) {
 		List<Person> childrenList = p.getChildrenList();
 		System.out.println( "Children of " + p.getName() + ":");
 		for( Person child : childrenList ) {
@@ -112,16 +123,208 @@ public class PersonManager {
 		}
 	}
 
-	public void listBrethren( Person p ) {
+	public static void listBrethren( Person p ) {
 		Set<Person> brethrenSet = new HashSet<Person>();
 		if( p.getFather() != null ) brethrenSet.addAll( p.getFather().getChildrenList() );
 		if( p.getMother() != null ) brethrenSet.addAll( p.getMother().getChildrenList() );
-		brethrenSet.remove( this );
+		brethrenSet.remove( p );
 		
 		System.out.println( "Brethren of " + p.getName() + ":");
 		for( Person sibling : brethrenSet ) {
 			System.out.println( sibling.getName() );
 		}
+	}
+	
+// *** KINSHIP METHODS ***
+	
+	public static void checkKinship( Person p1, Person p2 ) {
+		if( p1 == p2 ) {
+			if( p1 instanceof Male )
+				System.out.println( p2.getName() + " is the person himself!" );
+			else if( p1 instanceof Female )
+				System.out.println( p2.getName() + " is the person herself!" );
+			return;
+		}
+		
+		String msg = string_checkKinship( p1, p2 );
+		
+		if( msg != " ascends from " && msg != " descends from " && msg != " is not related to " ) {
+			if( ! p2.getName().endsWith("s") ) {
+				System.out.println( p1.getName() + " is " + p2.getName() + "'s " + msg + "." );
+			} else {
+				System.out.println( p1.getName() + " is " + p2.getName() + "' " + msg + "." );
+			}
+		} else if( msg != " is not related to " ) {
+			System.out.println( p1.getName() + msg + p2.getName() + " with degree " + degree + "." );
+		} else {
+			System.out.println( p1.getName() + msg + p2.getName() + "." );
+		}
+	}
+	
+	private static String string_checkKinship( Person p1, Person p2 ) {
+		boolean m;
+		if( p1 instanceof Male ) m = true;
+		else					 m = false;
+		
+		if( p1.getSpouse() != null & p1.getSpouse() == p2 ) {
+			if( m ) return "husband";
+			else	return "wife";
+		}
+		
+		degree = isSiblingOf( p1, p2 );
+		
+		if( degree == 2 ) {
+			if( m ) return "brother";
+			else	return "sister";
+		}
+		if( degree == 1 ) {
+			if( m ) return "half brother";
+			else	return "half sister";
+		}
+		if( isUncleOrAuntOf( p1, p2 ) == true ) {
+			if( m ) return "uncle";
+			else	return "aunt";
+		}
+		if( isNephewOrNieceOf( p1, p2 ) == true ) {
+			if( m ) return "nephew";
+			else	return "niece";
+		}
+		if( isCousinOf( p1, p2 ) == true ) {
+			return "cousin";
+		}
+		
+		degree = ascendsFrom( p1, p2 );
+		
+		if( degree == 1 ) {
+			if( m ) return "father";
+			else	return "mother";
+		}
+		if( degree == 2 ) {
+			if( m ) return "grandfather";
+			else	return "grandmother";
+		}
+		if( degree == 3 ) {
+			if( m ) return "great grandfather";
+			else	return "great grandmother";
+		}
+		if( degree > 3 ) {
+			return " ascends from ";			
+		}
+		
+		degree = descendsFrom( p1, p2 );
+		
+		if( degree == 1 ) {
+			if( m ) return "son";
+			else	return "daughter";
+		}
+		if( degree == 2 ) {
+			if( m ) return "grandson";
+			else	return "granddaughter";
+		}
+		if( degree == 3 ) {
+			if( m ) return "great-grandson";
+			else	return "great-granddaughter";
+		}
+		if( degree > 3 ) {
+			return " descends from ";			
+		}
+		
+		return " is not related to ";
+	}
+	
+	private static int age;
+	private static int degree;
+	
+	private static int rec_ascendsFrom( Person p1, Person p2 ) {
+		if( age <= p2.getAge() ) return 0;
+			
+		if( p1 == p2.getFather() || p1 == p2.getMother() ) {
+			degree += 1;
+			return degree;
+		}
+		if( p2.getFather() != null && rec_ascendsFrom( p1, p2.getFather()) >= 1 ) {
+			return degree += 1;
+		}
+		if( p2.getMother() != null && rec_ascendsFrom( p1, p2.getMother()) >= 1) {
+			return degree += 1;
+		}
+	
+		return 0;	
+	}
+	
+	private static int ascendsFrom( Person p1, Person p2 ) {
+		age = p1.getAge();
+		degree = 0;
+		return rec_ascendsFrom( p1, p2 );
+	}
+	private static int descendsFrom( Person p1, Person p2 ) {
+		age = p2.getAge();
+		degree = 0;
+		return rec_ascendsFrom( p2, p1 );
+	}
+	
+	// Retorna 2 para irmão, 1 para meio-irmão e 0 caso não seja irmào.
+	private static int isSiblingOf( Person p1, Person p2 ) {
+		if( (p1.getFather() == null && p1.getMother() == null) ||
+				  (p2.getFather() == null && p2.getMother() == null) )	return 0;
+		
+		ArrayList<Person> parentsList = new ArrayList<Person>();
+		if( p1.getFather() != null ) parentsList.add( p1.getFather() );
+		if( p1.getMother() != null ) parentsList.add( p1.getMother() );
+		if( p2.getFather() != null ) parentsList.add( p2.getFather() );
+		if( p2.getMother() != null ) parentsList.add( p2.getMother() );
+		
+		Set<Person> parentsSet = new HashSet<Person>();
+		parentsSet.addAll( parentsList );
+		
+		return parentsList.size() - parentsSet.size();
+	}
+	
+	private static boolean isUncleOrAuntOf( Person p1, Person p2 ) {
+		if( p1.getFather() == null && p1.getMother() == null ) return false;
+		if( p2.getFather() == null && p2.getMother() == null ) return false;
+		
+		if( p1 instanceof Male ) {
+			if( p1 == p2.getFather() ) return false;
+		} else {
+			if( p1 == p2.getMother() ) return false;
+		}
+		
+		if( isSiblingOf( p1, p2.getFather() ) > 0 ) return true;
+		if( isSiblingOf( p1, p2.getMother() ) > 0 ) return true;
+		
+		return false;
+	}
+	
+	private static boolean isNephewOrNieceOf( Person p1, Person p2 ) {
+		return isUncleOrAuntOf( p2, p1 );
+	}
+	
+	public static boolean isCousinOf( Person p1, Person p2 ) {
+		if( isSiblingOf( p1, p2 ) > 0 ) return false;
+		
+		ArrayList<Person> grandparentsList = new ArrayList<Person>();
+		Person obj = p1;
+		Person father;
+		Person mother;
+		
+		for( int i=0; i<=1; i++ ) {
+			if( obj.getFather() != null ) {
+				father = obj.getFather();
+				if( father.getFather() != null ) grandparentsList.add( father.getFather() );
+				if( father.getMother() != null ) grandparentsList.add( father.getMother() );
+			}
+			if( obj.getMother() != null ) {
+				mother = obj.getMother();
+				if( mother.getFather() != null ) grandparentsList.add( mother.getFather() );
+				if( mother.getMother() != null ) grandparentsList.add( mother.getMother() );
+			}
+			obj = p2;
+		}
+		
+		Set<Person> grandparentsSet = new HashSet<Person>( grandparentsList );
+		if( grandparentsSet.size() < grandparentsList.size() ) return true;
+		return false;
 	}
 	
 //	*** ACCESS METHODS ***

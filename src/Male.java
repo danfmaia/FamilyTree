@@ -1,9 +1,9 @@
 import java.time.LocalDate;
 
-public class Male extends Person {
+public final class Male extends Person {
 
-	public Male( String name, LocalDate dateOfBirth, Male father, Female mother ) {
-		super( name, dateOfBirth, father, mother );	
+	public Male( String name, LocalDate dateOfBirth, Female mother, Male father ) {
+		super( name, dateOfBirth, mother, father );	
 	}
 	
 	public void registerChild( Female mother, Person child ) {

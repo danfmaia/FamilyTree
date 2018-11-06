@@ -1,6 +1,6 @@
 import java.time.LocalDate;
 
-public class Marriage {
+public final class Marriage {
 	
 	public static enum Status {
 		NOTMARRIED,
@@ -17,7 +17,6 @@ public class Marriage {
 	public Marriage( Person person1, Person person2, LocalDate date ) {
 		this( person1, person2, date, Status.MARRIED );
 	}
-	
 	public Marriage( Person person1, Person person2, LocalDate date, Status status ) {
 		this.person1 = person1;
 		this.person2 = person2;
