@@ -1,33 +1,25 @@
 import java.time.LocalDate;
 
-public class Female extends Person {
+public final class Female extends Person implements WeightControl {
 	
 	private double weight;
 	private double height;
 	
-	public Female( String name, LocalDate dateOfBirth, Male father, Female mother ) {
-		super( name, dateOfBirth, father, mother );
+	public Female( String name, LocalDate dateOfBirth, Female mother, Male father ) {
+		super( name, dateOfBirth, mother, father );
 	}
-	public Female( String name, LocalDate dateOfBirth, Male father, Female mother, double weight, double height ) {
-		super( name, dateOfBirth, father, mother );
-		this.setWeight( weight );
-		this.setHeight( height );
-	}
-	
-	public void registerChild( Male father, Person child ) {
-		if( child.getMother() != null )
-			throw new RuntimeException( child.getName() + " is already associated to a mother!" );
-		if( child.getFather() != null && child.getFather() != father )
-			throw new RuntimeException( child.getName() + " is already associated to a father!" );
-		child.setFather( father );
-		child.setMother( this );
-		father.getChildrenList().add( child );
-		this.getChildrenList().add( child );
+	public Female( String name, LocalDate dateOfBirth, Female mother, Male father, double weight, double height ) {
+		super( name, dateOfBirth, mother, father );
+		this.weight = weight;
+		this.height = height;
 	}
 	
-	public double calcIMC() {
-		return( this.weight / Math.sqrt(this.height) );
+	@Override
+	public double calculateBMI() {
+		return( this.weight / (this.height * this.height) );
 	}
+	
+//	*** ACCESS METHODS ***
 	
 	public double getWeight() {
 		return weight;
