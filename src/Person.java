@@ -5,14 +5,22 @@ import java.util.List;
 
 public abstract class Person {
 	
+	public static enum MilitarSituation {
+		NOTCALLED,
+		CALLED,
+		EXEMPTED,
+		MILITARY,
+		OUTOFTIME
+	}
+	
 	private static int currentCode = -1;
 	private int code = ++currentCode;
 	private String name;
 	private LocalDate dateOfBirth;
 	private LocalDate dateOfDeath = null;
-	
 	private Male father;
 	private Female mother;
+	private MilitarSituation militarSituation = MilitarSituation.NOTCALLED;
 	
 	public Person( String name, LocalDate birthDate, Female mother, Male father ) {
 		this.name = name;
@@ -21,7 +29,7 @@ public abstract class Person {
 		if( this.father != null ) this.father.getChildrenList().add( this );
 		this.mother = mother;
 		if( this.mother != null ) this.mother.getChildrenList().add( this );
-		System.out.println( this.name + " is " + this.getAge() + " years old." );
+		System.out.println( this.name + " is " + this.getAge() + " years old and " );
 	}
 	
 //	*** ACCESS METHODS ***	
@@ -58,6 +66,19 @@ public abstract class Person {
 	}
 	public void setMother(Female mother) {
 		this.mother = mother;
+	}
+	public MilitarSituation getMilitarSituation() {
+		return militarSituation;
+	}
+	public void setMilitarSituation( MilitarSituation militarSituation ) {
+		int period = LocalDate.now().getYear() - this.getDateOfBirth().getYear();
+
+		if( militarSituation != Person.MilitarSituation.NOTCALLED && period < 18 )
+			throw new RuntimeException( this.getName() + " is not old enough for military service yet." );
+		if( militarSituation != Person.MilitarSituation.NOTCALLED && period < 18 )
+			throw new RuntimeException( this.getName() + " is not old enough for military service yet." );
+		
+		this.militarSituation = militarSituation;
 	}
 	
 //	*** DEPENDENT METHODS ***

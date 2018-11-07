@@ -4,22 +4,22 @@ public class Main {
 
 	public static void main(String[] args) {
 		
-		// Ver como pôr a carga do BD em outra classe/método.
+		// Ver como pôr a carga do BD em outra classe/método. Por ex.: JSON.
 		
 		Female pDonaNeves = PersonManager.addPerson( new Female( "Dona Neves", LocalDate.of(1930,1,1), null, null ) );
-		Male pSirNeves = PersonManager.addPerson( new Male( "Sir Neves", LocalDate.of(1930,1,1), null, null ) );
+		Male pSirNeves = PersonManager.addPerson( new Male( "Sir Neves", LocalDate.of(1930,1,1), null, null, Person.MilitarSituation.NOTPENDING) );
 		Female pDonaMadruga = PersonManager.addPerson( new Female( "Dona Madruga", LocalDate.of(1930,1,1), null, null ) );
-		Male pSirMadruga = PersonManager.addPerson( new Male( "Sir Madruga", LocalDate.of(1930,1,1), null, null ) );
-		Male pQuicoPai = PersonManager.addPerson( new Male( "Quico Pai", LocalDate.of(1960,1,1), pDonaNeves, pSirNeves ) );
+		Male pSirMadruga = PersonManager.addPerson( new Male( "Sir Madruga", LocalDate.of(1930,1,1), null, null, Person.MilitarSituation.NOTPENDING) );
+		Male pQuicoPai = PersonManager.addPerson( new Male( "Quico Pai", LocalDate.of(1960,1,1), pDonaNeves, pSirNeves, Person.MilitarSituation.NOTPENDING) );
 		Female pDonaFlorinda = PersonManager.addPerson( new Female( "Dona Florinda", LocalDate.of(1960,1,1), null, null ) );
-		Male pProfGirafales = PersonManager.addPerson( new Male( "Professor Girafales", LocalDate.of(1960,1,1), null, null ) );
+		Male pProfGirafales = PersonManager.addPerson( new Male( "Professor Girafales", LocalDate.of(1960,1,1), null, null, Person.MilitarSituation.NOTPENDING) );
 		Female pMaeChiquinha = PersonManager.addPerson( new Female( "Mae da Chiquinha", LocalDate.of(1960,1,1), pDonaNeves, pSirNeves ) );
-		Male pSeuMadruga = PersonManager.addPerson( new Male( "Seu Madruga", LocalDate.of(1960,1,1), pDonaMadruga, pSirMadruga ) );
+		Male pSeuMadruga = PersonManager.addPerson( new Male( "Seu Madruga", LocalDate.of(1960,1,1), pDonaMadruga, pSirMadruga, Person.MilitarSituation.NOTPENDING) );
 		Female pBruxa71 = PersonManager.addPerson( new Female( "Bruxa do 71", LocalDate.of(1960,1,1), null, null ) );
-		Male pQuico = PersonManager.addPerson( new Male( "Quico", LocalDate.of(1990,1,1), null, null ) );
+		Male pQuico = PersonManager.addPerson( new Male( "Quico", LocalDate.of(1990,1,1), null, null, Person.MilitarSituation.NOTPENDING) );
 		Female pKika = PersonManager.addPerson( new Female( "Kika", LocalDate.of(1990,1,1), pDonaFlorinda, pQuicoPai ) );
 		Female pChiquinha = PersonManager.addPerson( new Female( "Chiquinha", LocalDate.of(1990,1,1), pMaeChiquinha, pSeuMadruga ) );
-		Male pChaves = PersonManager.addPerson( new Male( "Chaves", LocalDate.of(1990,1,1), pBruxa71, pSeuMadruga ) );
+		Male pChaves = PersonManager.addPerson( new Male( "Chaves", LocalDate.of(1990,1,1), pBruxa71, pSeuMadruga, Person.MilitarSituation.NOTPENDING) );
 		PersonManager.registerChild( pDonaFlorinda, pQuicoPai, pQuico );
 		
 		System.out.println( "test1 " + pDonaNeves.getSpouse() );
